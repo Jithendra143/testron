@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown, ChevronUp } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 const headerData = [
   { title: 'Home', link: '/' },
@@ -18,6 +19,7 @@ const headerData = [
   { title: 'Contact Us', link: '/contact' }
 ]
 export default function HeaderMenu () {
+  const pathname = usePathname()
   const [openMenu, setOpenMenu] = useState(null)
 
   const handleMenuToggle = title => {
@@ -28,28 +30,48 @@ export default function HeaderMenu () {
       {headerData.map(item => (
         <div key={item?.title} className='relative group'>
           {item.subMenu ? (
-            <button
-              onClick={() => handleMenuToggle(item.title)}
-              className='hover:text-blue-700 hoverEffect relative px-1 flex items-center justify-center'
-            >
-              {item.title}{' '}
-              {openMenu === item.title ? (
-                <ChevronUp className='w-4 h-4 ml-1' />
-              ) : (
-                <ChevronDown className='w-4 h-4 ml-1' />
-              )}
-            </button>
+            <>
+              <button
+                onClick={() => handleMenuToggle(item.title)}
+                className={`hover:text-blue-700 hoverEffect relative px-1 flex items-center justify-center ${
+                  pathname.includes(item.link) && 'text-blue-700'
+                }`}
+              >
+                {item.title}{' '}
+                {openMenu === item.title ? (
+                  <ChevronUp className='w-4 h-4 ml-1' />
+                ) : (
+                  <ChevronDown className='w-4 h-4 ml-1' />
+                )}
+              </button>
+              <span
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-blue-700 group-hover:w-1/2 hoverEffect group-hover:left-0  ${
+                  pathname.includes(item.link) && 'w-1/2'
+                }`}
+              />
+              <span
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-blue-700 group-hover:w-1/2 hoverEffect group-hover:right-0 ${
+                  pathname.includes(item.link) && 'w-1/2'
+                }`}
+              />
+            </>
           ) : (
             <Link
               href={item?.link}
-              className={`hover:text-blue-700 hoverEffect relative px-1 py-0.5`}
+              className={`hover:text-blue-700 hoverEffect relative px-1 py-0.5 ${
+                pathname === item?.link && 'text-blue-700'
+              }`}
             >
               {item?.title}
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-blue-700 group-hover:w-1/2 hoverEffect group-hover:left-0`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-blue-700 group-hover:w-1/2 hoverEffect group-hover:left-0  ${
+                  pathname === item?.link && 'w-1/2'
+                }`}
               />
               <span
-                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-blue-700 group-hover:w-1/2 hoverEffect group-hover:right-0`}
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-blue-700 group-hover:w-1/2 hoverEffect group-hover:right-0 ${
+                  pathname === item?.link && 'w-1/2'
+                }`}
               />
             </Link>
           )}
@@ -61,7 +83,9 @@ export default function HeaderMenu () {
                   onClick={() => handleMenuToggle(item.title)}
                   key={sub.title}
                   href={sub.link}
-                  className='px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-300'
+                  className={`px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 transition-colors duration-300 ${
+                    pathname === sub.link && 'text-blue-700'
+                  }`}
                 >
                   {sub.title}
                 </Link>

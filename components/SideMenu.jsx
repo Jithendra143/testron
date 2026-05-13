@@ -4,6 +4,7 @@ import { X, ChevronDown, ChevronUp } from 'lucide-react'
 import Logo from './Logo'
 import Link from 'next/link'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation';
 
 const headerData = [
   { title: 'Home', link: '/' },
@@ -21,6 +22,7 @@ const headerData = [
 ]
 
 export default function SideMenu ({ isOpen, onClose }) {
+  const pathname = usePathname()
   const [openSubMenu, setOpenSubMenu] = useState(null)
 
   const toggleSubMenu = title => {
@@ -60,7 +62,7 @@ export default function SideMenu ({ isOpen, onClose }) {
                     onClick={() => {
                       toggleSubMenu(item.title)
                     }}
-                    className='flex items-center justify-between w-full'
+                    className={`flex items-center justify-between w-full ${pathname.includes(item.link) && 'text-blue-700'}`}
                   >
                     {item.title}
 
@@ -73,7 +75,7 @@ export default function SideMenu ({ isOpen, onClose }) {
 
                   {/* Submenu */}
                   {openSubMenu === item.title && (
-                    <div className='ml-4 mt-3 flex flex-col space-y-3 text-sm text-white/70'>
+                    <div className={`ml-4 mt-3 flex flex-col space-y-3 text-sm text-white`}>
                       {item.subMenu.map(sub => (
                         <Link
                           key={sub.title}
@@ -82,7 +84,7 @@ export default function SideMenu ({ isOpen, onClose }) {
                             toggleSubMenu(item.title)
                             onClose()
                           }}
-                          className='hover:text-blue-400 transition-colors duration-300'
+                          className={`hover:text-blue-400 transition-colors duration-300 ${pathname === sub.link && 'text-blue-700'}`}
                         >
                           {sub.title}
                         </Link>
@@ -97,7 +99,7 @@ export default function SideMenu ({ isOpen, onClose }) {
                     toggleSubMenu(item.title)
                     onClose()
                   }}
-                  className='hover:text-blue-400 transition-colors duration-300'
+                  className={`hover:text-blue-400 transition-colors duration-300 ${pathname === item.link && 'text-blue-700'}`}
                 >
                   {item.title}
                 </Link>
