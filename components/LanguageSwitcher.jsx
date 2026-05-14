@@ -6,59 +6,49 @@ import {
   SA,
   US,
   FR,
-  IN,
   RU,
   ES
 } from 'country-flag-icons/react/3x2'
+
 import { languages } from '@/config/languages'
+
+import { useLocale } from 'next-intl'
+import { usePathname, useRouter } from '@/i18n/navigation'
 
 export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedLanguage, setSelectedLanguage] = useState(null)
-  const [mounted, setMounted] = useState(false)
+
+  const locale = useLocale()
+  const router = useRouter()
+  const pathname = usePathname()
 
   const flags = {
     ar: <SA title='Arabic' className='w-6 h-6 rounded-sm' />,
     en: <US title='English' className='w-6 h-6 rounded-sm' />,
     fr: <FR title='French' className='w-6 h-6 rounded-sm' />,
-    kn: <IN title='Kannada' className='w-6 h-6 rounded-sm' />,
     ru: <RU title='Russian' className='w-6 h-6 rounded-sm' />,
     es: <ES title='Spanish' className='w-6 h-6 rounded-sm' />
   }
 
+  const selectedLanguage =
+    languages.find(lang => lang.code === locale) || languages[0]
+
   useEffect(() => {
-    setMounted(true)
-
-    const savedLanguage = localStorage.getItem('language')
-
-    if (savedLanguage) {
-      const foundLanguage = languages.find(
-        lang => lang.code === savedLanguage
-      )
-
-      if (foundLanguage) {
-        setSelectedLanguage(foundLanguage)
-        updateDocument(foundLanguage)
-        return
-      }
-    }
-
-    setSelectedLanguage(languages[1])
-  }, [])
-
-  const updateDocument = language => {
-    document.documentElement.lang = language.code
-    document.documentElement.dir = language.dir
-  }
+    document.documentElement.lang = selectedLanguage.code
+    document.documentElement.dir = selectedLanguage.dir
+  }, [selectedLanguage])
 
   const handleSelect = language => {
-    setSelectedLanguage(language)
-    localStorage.setItem('language', language.code)
-    updateDocument(language)
+    if (language.code !== locale) {
+      router.replace(pathname, {
+        locale: language.code
+      })
+
+      router.refresh()
+    }
+
     setIsOpen(false)
   }
-
-  if (!mounted || !selectedLanguage) return null
 
   return (
     <div className='relative w-48'>
@@ -83,6 +73,7 @@ export default function LanguageSwitcher() {
               className='w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50'
             >
               {flags[language.code]}
+
               <span className='text-sm font-medium text-gray-700'>
                 {language.label}
               </span>
