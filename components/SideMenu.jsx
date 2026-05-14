@@ -5,25 +5,28 @@ import Logo from './Logo'
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 const headerData = [
-  { title: 'Home', link: '/' },
-  { title: 'About Us', link: '/about' },
-  { title: 'Machines', link: '/machines' },
+  { title: 'home', link: '/' },
+  { title: 'about', link: '/about' },
+  { title: 'machines', link: '/machines' },
   {
-    title: 'Spares & Service',
+    title: 'spares_service',
     link: '/spares-service',
     subMenu: [
-      { title: 'Spares', link: '/spares-service/spares' },
-      { title: 'Service', link: '/spares-service/services' }
+      { title: 'spares', link: '/spares-service/spares' },
+      { title: 'services', link: '/spares-service/services' }
     ]
   },
-  { title: 'Contact Us', link: '/contact' }
+  { title: 'contact', link: '/contact' }
 ]
 
 export default function SideMenu ({ isOpen, onClose }) {
   const pathname = usePathname()
   const [openSubMenu, setOpenSubMenu] = useState(null)
+
+  const t = useTranslations('menus')
 
   const toggleSubMenu = title => {
     setOpenSubMenu(prev => (prev === title ? null : title))
@@ -64,7 +67,7 @@ export default function SideMenu ({ isOpen, onClose }) {
                     }}
                     className={`flex items-center justify-between w-full ${pathname.includes(item.link) && 'text-blue-700'}`}
                   >
-                    {item.title}
+                    {t(item.title)}
 
                     {openSubMenu === item.title ? (
                       <ChevronUp className='w-4 h-4' />
@@ -86,7 +89,7 @@ export default function SideMenu ({ isOpen, onClose }) {
                           }}
                           className={`hover:text-blue-400 transition-colors duration-300 ${pathname === sub.link && 'text-blue-700'}`}
                         >
-                          {sub.title}
+                          {t(sub.title)}
                         </Link>
                       ))}
                     </div>
@@ -101,7 +104,7 @@ export default function SideMenu ({ isOpen, onClose }) {
                   }}
                   className={`hover:text-blue-400 transition-colors duration-300 ${pathname === item.link && 'text-blue-700'}`}
                 >
-                  {item.title}
+                  {t(item.title)}
                 </Link>
               )}
             </div>

@@ -94,7 +94,7 @@ export default function ClientLogoSlider() {
 									alt={client.name}
 									width={140}
 									height={70}
-									className="object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+									className="w-auto h-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
 								/>
 							</div>
 						))}

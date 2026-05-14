@@ -4,6 +4,7 @@ import HomeBanner from "@/components/HomeBanner";
 import SectionWrapper from "@/components/SectionWrapper";
 
 import { SubText, SubTitle, Title } from "@/components/ui/text";
+import { useTranslations } from "next-intl";
 
 const advantages = [
 	{
@@ -33,6 +34,7 @@ const advantages = [
 ];
 
 export default function Home() {
+	const t = useTranslations('home')
 	return (
 		<>
 			<HomeBanner />
@@ -41,13 +43,11 @@ export default function Home() {
 			<SectionWrapper className="bg-blue-100">
 				<div className="min-h-[50vh] flex flex-col items-center justify-center text-center gap-6 max-w-4xl mx-auto">
 					<Title className="text-3xl md:text-5xl font-light text-darkColor leading-tight">
-						Powering Polymer Innovation.
+						{t('home_about_title')}
 					</Title>
 
 					<SubText className="text-base md:text-xl text-lightColor leading-relaxed">
-						Testron Engineering is a Dynamic Plastic Processing and Polymer
-						Solutions company built on strong engineering foundations and real
-						industry experience.
+						{t('home_about_description')}
 					</SubText>
 				</div>
 			</SectionWrapper>
@@ -56,23 +56,20 @@ export default function Home() {
 			<SectionWrapper className="bg-linear-to-r from-blue-700 to-blue-900">
 				<div className="min-h-[50vh] flex flex-col items-center justify-center text-center gap-6">
 					<Title className="text-3xl md:text-5xl font-light text-white leading-tight">
-						The Testron Advantage
+						{t('home_advantage_title')}
 					</Title>
 
 					<SubTitle className="text-lg md:text-2xl text-white/95 font-medium leading-relaxed">
-						Engineered Precision. Proven Performance. Long-Term Partnership.
+						{t('home_advantahe_subtitle')}
 					</SubTitle>
 
 					<div className="space-y-5 max-w-4xl">
 						<SubText className="text-base md:text-xl text-white/90 leading-relaxed">
-							Choosing an engineering partner is not a purchasing decision; it
-							is a production decision.
+							{t('home_advantage_text1')}
 						</SubText>
 
 						<SubText className="text-base md:text-xl text-white/90 leading-relaxed">
-							At Testron Engineering, we understand that every machine, every
-							screw design, and every process configuration directly impacts
-							your output, product quality, and profitability.
+							{t('home_advantage_text2')}
 						</SubText>
 					</div>
 
