@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 import {
   Select,
@@ -34,7 +35,9 @@ export default function ContactForm () {
     register,
     handleSubmit,
     setValue,
-    formState: { errors }
+    reset,
+    watch,
+    formState: { errors, isSubmitting }
   } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,15 +52,36 @@ export default function ContactForm () {
     }
   })
 
-  const onSubmit = values => {
-    console.log(values)
+  const selectedCountry = watch('country', '')
+
+  const onSubmit = async values => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast.success('Message sent successfully', {
+          description: 'We will contact you shortly.'
+        })
+        reset()
+      } else {
+        toast.error('Failed to send message')
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error('Something went wrong')
+    }
   }
 
   return (
-    <form
-      className='space-y-5'
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form className='space-y-5' onSubmit={handleSubmit(onSubmit)}>
       {/* Row 1 */}
       <div className='grid grid-cols-1 gap-5 sm:grid-cols-2'>
         <div>
@@ -68,9 +92,7 @@ export default function ContactForm () {
           />
 
           {errors.name && (
-            <p className='mt-1 text-sm text-red-500'>
-              {errors.name.message}
-            </p>
+            <p className='mt-1 text-sm text-red-500'>{errors.name.message}</p>
           )}
         </div>
 
@@ -82,9 +104,7 @@ export default function ContactForm () {
           />
 
           {errors.phone && (
-            <p className='mt-1 text-sm text-red-500'>
-              {errors.phone.message}
-            </p>
+            <p className='mt-1 text-sm text-red-500'>{errors.phone.message}</p>
           )}
         </div>
       </div>
@@ -100,9 +120,7 @@ export default function ContactForm () {
           />
 
           {errors.email && (
-            <p className='mt-1 text-sm text-red-500'>
-              {errors.email.message}
-            </p>
+            <p className='mt-1 text-sm text-red-500'>{errors.email.message}</p>
           )}
         </div>
 
@@ -114,9 +132,7 @@ export default function ContactForm () {
           />
 
           {errors.city && (
-            <p className='mt-1 text-sm text-red-500'>
-              {errors.city.message}
-            </p>
+            <p className='mt-1 text-sm text-red-500'>{errors.city.message}</p>
           )}
         </div>
       </div>
@@ -125,6 +141,7 @@ export default function ContactForm () {
       <div className='grid grid-cols-1 gap-5 sm:grid-cols-2'>
         <div>
           <Select
+            value={selectedCountry}
             onValueChange={value => setValue('country', value)}
           >
             <SelectTrigger className='h-13 min-h-13 w-full rounded-none border border-gray-300 bg-background px-3 text-sm shadow-none focus:ring-1 focus:ring-blue-600 focus:ring-offset-0'>
@@ -133,10 +150,7 @@ export default function ContactForm () {
 
             <SelectContent className='max-h-80'>
               {countries.map(country => (
-                <SelectItem
-                  key={country}
-                  value={country}
-                >
+                <SelectItem key={country} value={country}>
                   {country}
                 </SelectItem>
               ))}
@@ -199,9 +213,10 @@ export default function ContactForm () {
       {/* Button */}
       <Button
         type='submit'
+        disabled={isSubmitting}
         className='mt-3 h-13 rounded-none bg-blue-600 px-8 text-sm font-semibold hover:bg-blue-700'
       >
-        Send Message
+        {isSubmitting ? 'Sending...' : 'Send Message'}
       </Button>
     </form>
   )
