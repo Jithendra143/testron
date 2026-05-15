@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
+import { Toaster } from "@/components/ui/sonner";
 
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -41,6 +42,17 @@ export default async function RootLayout({ children, params }) {
 						<main className="flex-1">{children}</main>
 						<Footer />
 						<BackToTop />
+						<Toaster
+							position="bottom-center"
+							richColors
+							closeButton
+							toastOptions={{
+								classNames: {
+									success: "!bg-green-600 !text-white !border-green-600",
+									error: "!bg-red-600 !text-white !border-red-600",
+								},
+							}}
+						/>
 					</NextIntlClientProvider>
 				</div>
 			</body>
